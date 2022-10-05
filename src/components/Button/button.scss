@@ -1,0 +1,16 @@
+.button-more{
+	display: block;
+	width: 140px;
+	height: 40px;
+	margin: 0 auto;
+
+	border: none;
+	border-radius: 5px;
+	background-color: rgba(123, 123, 123, 1);
+	color: rgba(217, 217, 217, 1);
+	cursor: pointer;
+	&:hover,
+	&:focus {
+	  background-color: rgba(156, 138, 92, 1);
+	}
+}

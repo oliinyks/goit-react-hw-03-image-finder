@@ -1,0 +1,17 @@
+.gallery {
+  padding: 0;
+  margin-bottom: 30px;
+  list-style: none;
+  display: grid;
+  grid-gap: 10px;
+
+  @media (min-width: 700px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (min-width: 1220px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+.error{
+	color: rgba(156, 138, 92, 1);
+}
