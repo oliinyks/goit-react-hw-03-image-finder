@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class Modal extends Component {
 	handleKeyDown = e => {
@@ -30,4 +31,10 @@ class Modal extends Component {
     );
   }
 }
+
+Modal.propTypes = {
+	url: PropTypes.string.isRequired,
+	closeModal: PropTypes.func.isRequired,
+ };
+
 export default Modal;

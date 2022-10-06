@@ -74,8 +74,8 @@ class ImageGallery extends Component {
       return (
         <>
           <ul className="gallery">
-            {photo.hits.map(({ id, webformatURL, largeImageURL, tags }) => (
-            <ImageGalleryItem key={id} url={webformatURL} largeImageURL={largeImageURL} alt={tags} onClick={this.onOpenModalWithLargeImage}/>
+            {photo.hits.map(photo => (
+            <ImageGalleryItem key={photo.id} photo={photo} onClick={this.onOpenModalWithLargeImage}/>
 				))}
           </ul>
 			 {currentLargeImageURL && (<Modal closeModal={this.onModalClose} url={currentLargeImageURL}/>)}
