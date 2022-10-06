@@ -1,7 +1,13 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
+import './modal.scss'
 
 class Modal extends Component {
+	state = {
+		url: this.props.url,
+	};
+
+
 	handleKeyDown = e => {
 		if (e.code === 'Escape') {
 			 this.props.closeModal();
@@ -25,7 +31,7 @@ class Modal extends Component {
     return (
       <div className="overlay" onClick={this.handleBackdropClick}>
         <div className="modal">
-          <img src={this.props.url} alt='' />
+          <img className='img' src={this.state.url} alt='' />
         </div>
       </div>
     );
