@@ -25,7 +25,7 @@ class Modal extends Component {
     return (
       <div className="overlay" onClick={this.handleBackdropClick}>
         <div className="modal">
-          {/* <img src={this.props.url} /> */}
+          <img src={this.props.url} alt='' />
         </div>
       </div>
     );
