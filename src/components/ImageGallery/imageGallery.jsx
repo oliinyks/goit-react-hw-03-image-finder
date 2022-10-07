@@ -7,41 +7,41 @@ import './imageGallery.scss';
 
 class ImageGallery extends Component {
   state = {
-    photo: null,
+    photo: [],
     error: null,
     page: 1,
-	 currentLargeImageURL: '',
+    currentLargeImageURL: '',
+    searchTotal: null,
     status: 'idle',
   };
 
-  onOpenModalWithLargeImage = (url) => {
-	this.setState({
-	  currentLargeImageURL: url,
-	})
- }
-
- onModalClose = () => {
-	this.setState({
-	  currentLargeImageURL: "",
-	})
- }
-
-  hendlerMoreClick = page => {
-    this.setState({ page });
+  onOpenModalWithLargeImage = url => {
+    this.setState({
+      currentLargeImageURL: url,
+    });
   };
 
-  componentDidUpdate(prevProps) {
+  onModalClose = () => {
+    this.setState({
+      currentLargeImageURL: '',
+    });
+  };
+
+  hendlerMoreClick = () => {
+    this.setState(prevState => ({ page: prevState.page + 1 }));
+  };
+
+  componentDidUpdate(prevProps, prevState) {
     const prevName = prevProps.photoName;
     const nextName = this.props.photoName;
-   //  const prevPage = prevProps.page;
+    const prevPage = prevState.page;
     const nextPage = this.state.page;
-   //  console.log("🚀 ~ file: imageGallery.jsx ~ line 23 ~ ImageGallery ~ componentDidUpdate ~ prevPage", prevPage)
-   //  console.log("🚀 ~ file: imageGallery.jsx ~ line 25 ~ ImageGallery ~ componentDidUpdate ~ nextPage", nextPage)
-	// if (prevName !== nextName || prevPage !== nextPage) {
-	// if (prevName !== nextName || nextPage > 1) {
-		// || prevPage < nextPage
 
     if (prevName !== nextName) {
+      this.setState({ page: 1, photo: [] });
+    }
+
+    if (prevName !== nextName || prevPage !== nextPage) {
       this.setState({ status: 'pending' });
       fetch(
         `https://pixabay.com/api/?q=${nextName}&page=${nextPage}&key=29451917-11054f18e01d02c62ffb7517a&image_type=photo&orientation=horizontal&per_page=12`
@@ -52,20 +52,26 @@ class ImageGallery extends Component {
           }
           return Promise.reject(new Error());
         })
-        .then(photo => this.setState({ photo, status: 'resolved' }))
+        .then(photo =>
+          this.setState(prevState => ({
+            photo: [...prevState.photo, ...photo.hits],
+            status: 'resolved',
+            searchTotal: photo.total,
+          }))
+        )
         .catch(error => this.setState({ error, status: 'rejected' }));
     }
   }
 
   render() {
-    const { photo, status, currentLargeImageURL } = this.state;
+    const { photo, status, currentLargeImageURL, searchTotal } = this.state;
     if (status === 'idle') {
       return;
     }
     if (status === 'pending') {
       return <Loader />;
     }
-    if (status === 'rejected' || photo.total === 0) {
+    if (status === 'rejected' || photo.length === 0) {
       return (
         <p className="error">No '{this.props.photoName}' image was found</p>
       );
@@ -74,12 +80,18 @@ class ImageGallery extends Component {
       return (
         <>
           <ul className="gallery">
-            {photo.hits.map(photo => (
-            <ImageGalleryItem key={photo.id} photo={photo} onClick={this.onOpenModalWithLargeImage}/>
-				))}
+            {photo.map(photo => (
+              <ImageGalleryItem
+                key={photo.id}
+                photo={photo}
+                onClick={this.onOpenModalWithLargeImage}
+              />
+            ))}
           </ul>
-			 {currentLargeImageURL && (<Modal closeModal={this.onModalClose} url={currentLargeImageURL}/>)}
-          <Button onClick={this.hendlerMoreClick} />
+          {currentLargeImageURL && (
+            <Modal closeModal={this.onModalClose} url={currentLargeImageURL} />
+          )}
+          {searchTotal > 12 && <Button onClick={this.hendlerMoreClick} />}
         </>
       );
     }

@@ -1,22 +1,13 @@
-import React, { Component } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import './button.scss';
 
-class Button extends Component {
-  state = {
-    page: 1,
-  };
-  loadMore = () => {
-    this.setState(prevState => ({
-      page: prevState.page + 1,
-    }));
-	 this.props.onClick(this.state.page)
-  };
-  render() {
-    return (
-      <button onClick={this.loadMore} className="button-more" type="button">
-        Load more
-      </button>
-    );
-  }
-}
+const Button = ({onClick}) => (
+	<button onClick={() => onClick()} className="button-more" type="button">Load more</button>
+);
+
+Button.propTypes = {
+  hendlerMoreClick: PropTypes.func,
+};
+
 export default Button;

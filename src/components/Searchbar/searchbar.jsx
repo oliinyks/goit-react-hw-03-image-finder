@@ -6,7 +6,6 @@ import './searchbar.scss'
 class Searchbar extends Component {
   state = {
     searchName: '',
-	 page: 1,
   };
   handleNameChange = e => {
     this.setState({ searchName: e.currentTarget.value.toLowerCase() });
@@ -18,7 +17,7 @@ class Searchbar extends Component {
       return toast.error('Please select an image');
     }
     this.props.onSubmit(this.state.searchName);
-    this.setState({ searchName: '', page: 1 });
+    this.setState({ searchName: ''});
   };
 
   render() {
