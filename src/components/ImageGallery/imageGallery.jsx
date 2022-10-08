@@ -12,7 +12,7 @@ class ImageGallery extends Component {
     page: 1,
     currentLargeImageURL: '',
     searchTotal: null,
-    status: 'idle',
+    loader: false,
   };
 
   onOpenModalWithLargeImage = url => {
@@ -42,7 +42,7 @@ class ImageGallery extends Component {
     }
 
     if (prevName !== nextName || prevPage !== nextPage) {
-      this.setState({ status: 'pending' });
+      this.setState({ loader: true });
       fetch(
         `https://pixabay.com/api/?q=${nextName}&page=${nextPage}&key=29451917-11054f18e01d02c62ffb7517a&image_type=photo&orientation=horizontal&per_page=12`
       )
@@ -55,30 +55,23 @@ class ImageGallery extends Component {
         .then(photo =>
           this.setState(prevState => ({
             photo: [...prevState.photo, ...photo.hits],
-            status: 'resolved',
             searchTotal: photo.total,
           }))
         )
-        .catch(error => this.setState({ error, status: 'rejected' }));
+        .catch(error => this.setState({ error }))
+        .finally(this.setState({ loader: false }));
     }
   }
 
   render() {
-    const { photo, status, currentLargeImageURL, searchTotal } = this.state;
-    if (status === 'idle') {
-      return;
-    }
-    if (status === 'pending') {
-      return <Loader />;
-    }
-    if (status === 'rejected' || photo.length === 0) {
-      return (
-        <p className="error">No '{this.props.photoName}' image was found</p>
-      );
-    }
-    if (status === 'resolved') {
-      return (
-        <>
+    const { photo, loader, currentLargeImageURL, searchTotal } = this.state;
+    const { photoName } = this.props;
+    return (
+      <>
+        {loader && <Loader />}
+        {photo.length === 0 ? (
+          <p className="error">No '{photoName}' image was found</p>
+        ) : (
           <ul className="gallery">
             {photo.map(photo => (
               <ImageGalleryItem
@@ -88,13 +81,13 @@ class ImageGallery extends Component {
               />
             ))}
           </ul>
-          {currentLargeImageURL && (
-            <Modal closeModal={this.onModalClose} url={currentLargeImageURL} />
-          )}
-          {searchTotal > 12 && <Button onClick={this.hendlerMoreClick} />}
-        </>
-      );
-    }
+        )}
+        {currentLargeImageURL && (
+          <Modal closeModal={this.onModalClose} url={currentLargeImageURL} />
+        )}
+        {searchTotal > 12 && <Button onClick={this.hendlerMoreClick} />}
+      </>
+    );
   }
 }
 
