@@ -20,7 +20,7 @@ class App extends React.Component {
   };
 
   handlerFormSubmit = photoName => {
-    this.setState({ photoName,  page: 1, photo: [] });
+    this.setState({ photoName, page: 1 });
   };
 
   onOpenModalWithLargeImage = url => {
@@ -44,6 +44,9 @@ class App extends React.Component {
     const prevPage = prevState.page;
     const { photoName, page } = this.state;
 
+    if (photoName !== prevName) {
+      this.setState({photo: [] });
+    }
     if (prevName !== photoName || prevPage !== page) {
       this.setState({ loader: true });
       fetch(
@@ -67,8 +70,14 @@ class App extends React.Component {
   }
 
   render() {
-    const { photoName, page, loader, photo, currentLargeImageURL, searchTotal } =
-      this.state;
+    const {
+      photoName,
+      page,
+      loader,
+      photo,
+      currentLargeImageURL,
+      searchTotal,
+    } = this.state;
     return (
       <section className="section">
         <h1 className="headerTitle">
