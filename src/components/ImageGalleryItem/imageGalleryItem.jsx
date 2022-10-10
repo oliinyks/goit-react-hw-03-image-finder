@@ -17,7 +17,11 @@ const ImageGalleryItem = ({
 );
 
 ImageGalleryItem.propTypes = {
-  photo: PropTypes.object.isRequired,
+  photo: PropTypes.shape({
+	webformatURL: PropTypes.string.isRequired,
+	tags: PropTypes.string.isRequired,
+	largeImageURL: PropTypes.string.isRequired,
+  }).isRequired,
   onClick: PropTypes.func.isRequired,
 };
 

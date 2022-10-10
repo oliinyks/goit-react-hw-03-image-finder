@@ -7,7 +7,7 @@ const Button = ({onClick}) => (
 );
 
 Button.propTypes = {
-  hendlerMoreClick: PropTypes.func,
+  onClick: PropTypes.func.isRequired,
 };
 
 export default Button;
